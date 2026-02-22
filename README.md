@@ -2,7 +2,7 @@
 
 An interactive reference gallery showcasing **72 AMP email templates** across industry verticals, built to demonstrate the capabilities of [CleverTap's](https://clevertap.com) AMP Email channel.
 
-🔗 **Live demo:** [View Gallery](https://YOUR-USERNAME.github.io/amp-email-gallery/)
+🔗 **Live demo:** [View Gallery](https://shijunneo-bot.github.io/amp-email-gallery/)
 
 ---
 
