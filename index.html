@@ -169,6 +169,11 @@ h1 em{font-style:italic;font-weight:400;color:var(--accent);}
 .btn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;padding:7px 14px;border-radius:7px;border:1px solid;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .13s;white-space:nowrap;}
 .btn-g{background:transparent;color:var(--dim);border-color:var(--bb);}
 .btn-g:hover{border-color:var(--dim);color:var(--text);}
+.btn-copy{background:transparent;color:var(--accent);border-color:var(--accent);opacity:.8;}
+.btn-copy:hover{opacity:1;background:rgba(0,229,255,.08);}
+.btn-copy.copied{color:var(--green);border-color:var(--green);background:rgba(0,255,148,.08);}
+.btn-dl{background:transparent;color:var(--a2);border-color:var(--a2);opacity:.8;}
+.btn-dl:hover{opacity:1;background:rgba(255,184,0,.08);}
 
 
 .modal-body{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;}
@@ -489,6 +494,8 @@ h1 em{font-style:italic;font-weight:400;color:var(--accent);}
           <button class="dev-tab active" data-device="desktop">Desktop</button>
           <button class="dev-tab" data-device="mobile">Mobile</button>
         </div>
+        <button class="btn btn-copy" id="m-copy-html" title="Copy AMP HTML source">⎘ Copy HTML</button>
+        <button class="btn btn-dl" id="m-dl-html" title="Download AMP HTML file">↓ Download</button>
         <a class="btn btn-g" id="m-link" href="#" target="_blank">↗ Full Screen</a>
         <button class="btn btn-back" id="m-close">← Gallery</button>
       </div>
@@ -800,6 +807,55 @@ function openModal(t) {
   document.body.style.overflow = 'hidden';
   updateFeasPanel(t.file);
 }
+
+// ── COPY HTML ──
+document.getElementById('m-copy-html').addEventListener('click', function() {
+  if (!_currentTemplate) return;
+  var html = TEMPLATE_CONTENT[_currentTemplate.file] || '';
+  if (!html) { alert('Source not available for this template.'); return; }
+  navigator.clipboard.writeText(html).then(function() {
+    var btn = document.getElementById('m-copy-html');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = '⎘ Copy HTML';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(function() {
+    // Fallback for non-HTTPS or older browsers
+    var ta = document.createElement('textarea');
+    ta.value = html;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    var btn = document.getElementById('m-copy-html');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = '⎘ Copy HTML';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+});
+
+// ── DOWNLOAD HTML ──
+document.getElementById('m-dl-html').addEventListener('click', function() {
+  if (!_currentTemplate) return;
+  var html = TEMPLATE_CONTENT[_currentTemplate.file] || '';
+  if (!html) { alert('Source not available for this template.'); return; }
+  var blob = new Blob([html], { type: 'text/html' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = _currentTemplate.file || 'amp-template.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
 
 document.getElementById('m-close').addEventListener('click', closeModal);
 overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
