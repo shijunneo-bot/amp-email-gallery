@@ -808,49 +808,115 @@ function openModal(t) {
   updateFeasPanel(t.file);
 }
 
-// ── COPY HTML ──
+// ── EXTRACT CLEAN AMP EMAIL ──
+// Strips gallery wrapper (browser chrome, Gmail UI, research panels, page JS)
+// Returns ONLY the .ecard wrapped in a proper AMP4Email skeleton — ready to paste into CleverTap
+function extractAMPEmail(templateFile) {
+  var raw = TEMPLATE_CONTENT[templateFile] || '';
+  if (!raw) return null;
+
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(raw, 'text/html');
+
+  // 1. Get the email card only
+  var ecard = doc.querySelector('.ecard');
+  if (!ecard) return null;
+  var emailBody = ecard.outerHTML;
+
+  // 2. Extract email-only CSS (from .ecard class onwards — drops browser chrome / Gmail UI)
+  var styleEl = doc.querySelector('style');
+  var fullCSS = styleEl ? styleEl.textContent : '';
+  var ecardCSSIdx = fullCSS.indexOf('.ecard');
+  var emailCSS = ecardCSSIdx > -1 ? fullCSS.slice(ecardCSSIdx) : fullCSS;
+
+  // 3. Preserve Google Font imports from template
+  var fontLinks = '';
+  doc.querySelectorAll('link[href*="fonts.googleapis"]').forEach(function(l) {
+    fontLinks += '  <link href="' + l.getAttribute('href') + '" rel="stylesheet">\n';
+  });
+
+  // 4. Auto-detect which AMP component scripts are needed
+  var scripts = '';
+  if (raw.indexOf('amp-carousel') > -1)
+    scripts += '  <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"><\/script>\n';
+  if (raw.indexOf('amp-form') > -1 || emailBody.indexOf('<form') > -1)
+    scripts += '  <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"><\/script>\n';
+  if (raw.indexOf('amp-bind') > -1 || emailBody.indexOf('[hidden]') > -1)
+    scripts += '  <script async custom-extension="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"><\/script>\n';
+  if (raw.indexOf('amp-selector') > -1)
+    scripts += '  <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"><\/script>\n';
+  if (raw.indexOf('amp-list') > -1)
+    scripts += '  <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"><\/script>\n';
+  if (raw.indexOf('amp-accordion') > -1)
+    scripts += '  <script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"><\/script>\n';
+
+  // 5. Build AMP4Email document
+  return '<!DOCTYPE html>\n'
+    + '<html \u26a14email lang="en">\n'
+    + '<!--\n'
+    + '  AMP4Email Template — extracted from CleverTap AMP Email Gallery\n'
+    + '  File: ' + templateFile + '\n'
+    + '\n'
+    + '  CHECKLIST BEFORE SENDING IN CLEVERTAP:\n'
+    + '  1. Paste into: Campaigns > Email > New Campaign > Custom HTML & AMP Template\n'
+    + '  2. Replace merge tags e.g. {{FIRST_NAME}} with {{ profile["Name"] }}\n'
+    + '  3. Replace any form action-xhr URL with: @SpecialLinks - Submit Form\n'
+    + '  4. Convert onclick/JS interactions to AMP components (amp-bind, amp-form, amp-selector)\n'
+    + '     Gallery templates use vanilla JS for preview only — not valid in AMP email\n'
+    + '  5. Build a Fallback HTML version (paste into the Fallback HTML tab in CT editor)\n'
+    + '  6. Confirm: SendGrid ESP is active + Email Booster Max / Advanced Email add-on\n'
+    + '-->\n'
+    + '<head>\n'
+    + '  <meta charset="utf-8">\n'
+    + '  <style amp4email-boilerplate>body{visibility:hidden}<\/style>\n'
+    + '  <script async src="https://cdn.ampproject.org/v0.js"><\/script>\n'
+    + scripts
+    + fontLinks
+    + '  <style amp-custom>\n'
+    + emailCSS
+    + '\n  <\/style>\n'
+    + '<\/head>\n'
+    + '<body>\n'
+    + emailBody + '\n'
+    + '<\/body>\n'
+    + '<\/html>';
+}
+
+// ── COPY AMP EMAIL ──
 document.getElementById('m-copy-html').addEventListener('click', function() {
   if (!_currentTemplate) return;
-  var html = TEMPLATE_CONTENT[_currentTemplate.file] || '';
-  if (!html) { alert('Source not available for this template.'); return; }
+  var html = extractAMPEmail(_currentTemplate.file);
+  if (!html) { alert('Could not extract AMP email. Template source may not be available.'); return; }
+  var btn = document.getElementById('m-copy-html');
   navigator.clipboard.writeText(html).then(function() {
-    var btn = document.getElementById('m-copy-html');
-    btn.textContent = '✓ Copied!';
+    btn.textContent = '\u2714 Copied!';
     btn.classList.add('copied');
-    setTimeout(function() {
-      btn.textContent = '⎘ Copy HTML';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(function() { btn.textContent = '\u2358 Copy HTML'; btn.classList.remove('copied'); }, 2200);
   }).catch(function() {
-    // Fallback for non-HTTPS or older browsers
     var ta = document.createElement('textarea');
     ta.value = html;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
     document.body.appendChild(ta);
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    var btn = document.getElementById('m-copy-html');
-    btn.textContent = '✓ Copied!';
+    btn.textContent = '\u2714 Copied!';
     btn.classList.add('copied');
-    setTimeout(function() {
-      btn.textContent = '⎘ Copy HTML';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(function() { btn.textContent = '\u2358 Copy HTML'; btn.classList.remove('copied'); }, 2200);
   });
 });
 
-// ── DOWNLOAD HTML ──
+// ── DOWNLOAD AMP EMAIL ──
 document.getElementById('m-dl-html').addEventListener('click', function() {
   if (!_currentTemplate) return;
-  var html = TEMPLATE_CONTENT[_currentTemplate.file] || '';
-  if (!html) { alert('Source not available for this template.'); return; }
+  var html = extractAMPEmail(_currentTemplate.file);
+  if (!html) { alert('Could not extract AMP email. Template source may not be available.'); return; }
+  var filename = (_currentTemplate.file || 'amp-template.html').replace('.html', '_amp.html');
   var blob = new Blob([html], { type: 'text/html' });
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  a.href     = url;
-  a.download = _currentTemplate.file || 'amp-template.html';
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
