@@ -1,0 +1,42 @@
+# AMP Email Gallery
+
+> Interactive field guide to AMP for Email on CleverTap. 72 template prototypes across
+> 9 industry verticals with feasibility ratings and extractable AMP4Email production code.
+> Maintained by SJ Neo, Enterprise Customer Success Manager, CleverTap APAC.
+
+URL: https://shijunneo-bot.github.io/amp-email-gallery/
+
+## Key facts
+
+- AMP for Email lets recipients interact inside the inbox: forms, carousels, live data.
+- CleverTap documents AMP support through SendGrid. Other sending routes fall back to HTML.
+- AMP requires the Email Booster Max or Advanced Email add-on on the CleverTap plan.
+- Rendering clients listed in CleverTap documentation: Gmail, Yahoo Mail, Mail.ru, FairEmail.
+- AMP content expires 30 days after receipt. Forwarded messages show the HTML fallback.
+- Form submissions route through `@SpecialLinks - Submit Form` and land as a CleverTap event.
+- Every AMP email needs an HTML fallback for clients that do not render AMP.
+
+## Sections
+
+- AMP Gallery: 72 prototypes with Green, Amber and Red feasibility ratings.
+  Green works with standard AMP components. Amber needs backend infrastructure.
+  Red is conceptual, with suggested workarounds.
+- Award Journeys: DBS journey builder walkthrough.
+- Partner Stack: the five partner layers an email passes through.
+  Design (Stripo, Alpaco, Email Love, Taxi for Email),
+  Validate (Clearout, Kickbox),
+  Enrich (Movable Ink, NiftyImages, Sendtric, Litmus, Mailmodo and others),
+  Localise (Crowdin, Lokalise),
+  Deliver (SendGrid, Amazon SES, Postmark, Mandrill, Gmail, Generic SMTP).
+  The delivery layer is what determines whether AMP renders.
+
+## Related guides
+
+Seventeen field guides cover the CleverTap channel and platform stack.
+Full list: https://shijunneo-bot.github.io/amp-email-gallery/#gallery-network
+
+## Source
+
+CleverTap documentation: https://docs.clevertap.com/docs/ampforemail
+Email partners: https://docs.clevertap.com/docs/email-partners
+Current as of July 2026.
