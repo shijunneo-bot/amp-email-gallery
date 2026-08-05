@@ -1,42 +1,50 @@
 # AMP Email Gallery
 
 > Interactive field guide to AMP for Email on CleverTap. 72 template prototypes across
-> 9 industry verticals with feasibility ratings and extractable AMP4Email production code.
-> Maintained by SJ Neo, Enterprise Customer Success Manager, CleverTap APAC.
+> 9 industry verticals, each with a feasibility rating and extractable AMP4Email production
+> code. Part of an eighteen-guide series covering the full CleverTap channel and platform
+> stack. Maintained by SJ Neo, Enterprise Customer Success Manager, CleverTap APAC.
 
 URL: https://shijunneo-bot.github.io/amp-email-gallery/
+Series hub: https://shijunneo-bot.github.io/ct-gallery-hub/
 
 ## Key facts
 
 - AMP for Email lets recipients interact inside the inbox: forms, carousels, live data.
-- CleverTap documents AMP support through SendGrid. Other sending routes fall back to HTML.
+- AMP for Email renders through SendGrid. Other routes deliver the standard HTML version.
 - AMP requires the Email Booster Max or Advanced Email add-on on the CleverTap plan.
-- Rendering clients listed in CleverTap documentation: Gmail, Yahoo Mail, Mail.ru, FairEmail.
-- AMP content expires 30 days after receipt. Forwarded messages show the HTML fallback.
-- Form submissions route through `@SpecialLinks - Submit Form` and land as a CleverTap event.
-- Every AMP email needs an HTML fallback for clients that do not render AMP.
+- Rendering clients: Gmail, Yahoo Mail, Mail.ru, FairEmail. Others receive the HTML part.
+- AMP content expires 30 days after receipt. Forwarded messages show the HTML version.
+- Form submissions route through @SpecialLinks and land as a CleverTap event.
+- Every AMP email ships with an HTML fallback for clients that do not render AMP.
+- The page has a day and night theme, defaulting to night, remembering the reader's choice.
 
 ## Sections
 
-- AMP Gallery: 72 prototypes with Green, Amber and Red feasibility ratings.
-  Green works with standard AMP components. Amber needs backend infrastructure.
-  Red is conceptual, with suggested workarounds.
-- Award Journeys: DBS journey builder walkthrough.
-- Partner Stack: the five partner layers an email passes through.
-  Design (Stripo, Alpaco, Email Love, Taxi for Email),
-  Validate (Clearout, Kickbox),
-  Enrich (Movable Ink, NiftyImages, Sendtric, Litmus, Mailmodo and others),
-  Localise (Crowdin, Lokalise),
-  Deliver (SendGrid, Amazon SES, Postmark, Mandrill, Gmail, Generic SMTP).
-  The delivery layer is what determines whether AMP renders.
+- AMP Gallery: 72 prototypes with Green, Amber, and Red feasibility ratings. Green works
+  with standard AMP components. Amber needs backend infrastructure. Red is conceptual,
+  with suggested workarounds using supported components. Each template has Copy HTML and
+  Download, which return a clean AMP4Email document ready to paste into CleverTap.
+- Award Journeys: a DBS journey builder walkthrough.
+- Partner Stack: the five partner layers an email passes through. Design (Stripo, Alpaco,
+  Email Love, Taxi for Email), Validate (Clearout, Kickbox), Enrich (Movable Ink,
+  NiftyImages, Sendtric, Litmus, Mailmodo and others), Localise (Crowdin, Lokalise),
+  Deliver (SendGrid, Amazon SES, Postmark, Mandrill, Gmail, Generic SMTP). The delivery
+  layer determines whether AMP renders.
 
-## Related guides
+## The series, grouped by plan tier
 
-Seventeen field guides cover the CleverTap channel and platform stack.
-Full list: https://shijunneo-bot.github.io/amp-email-gallery/#gallery-network
+Advanced plan: Rich Push, Custom HTML In-App, Native Display, App and Web Inbox, Webhooks,
+  Linked Content, Geofencing, Bulletins.
+Cutting Edge plan: Recommendations and Catalog.
+Add-ons: Product Experiences, Reminders, Promos, AMP Email (Email add-on),
+  SMS and RCS (SMS add-on), WhatsApp (WhatsApp add-on).
+Platform: Trust and Security, Intelligence and Activation.
+
+Full index and links: https://shijunneo-bot.github.io/ct-gallery-hub/
 
 ## Source
 
-CleverTap documentation: https://docs.clevertap.com/docs/ampforemail
+CleverTap AMP documentation: https://docs.clevertap.com/docs/ampforemail
 Email partners: https://docs.clevertap.com/docs/email-partners
-Current as of July 2026.
+Current as of August 2026.

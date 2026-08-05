@@ -1,0 +1,15 @@
+# AMP Email Gallery — robots.txt
+User-agent: *
+Allow: /
+
+# AI / LLM crawlers welcome
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://shijunneo-bot.github.io/amp-email-gallery/sitemap.xml
